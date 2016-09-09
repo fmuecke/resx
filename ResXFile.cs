@@ -13,7 +13,7 @@ namespace fmdev.ResX
     using System.Text;
     using System.Threading.Tasks;
 
-    public static class ResXParser
+    public static class ResXFile
     {
         public static List<ResXEntry> Read(string filename)
         {
@@ -32,12 +32,14 @@ namespace fmdev.ResX
                         Comment = node.Comment.Replace("\r", string.Empty)
                     });
                 }
+
+                resx.Close();
             }
 
             return result;
         }
 
-        public static void Write(string filename, List<ResXEntry> entries)
+        public static void Write(string filename, IEnumerable<ResXEntry> entries)
         {
             using (var resx = new ResXResourceWriter(filename))
             {
@@ -52,6 +54,8 @@ namespace fmdev.ResX
 
                     resx.AddResource(node);
                 }
+
+                resx.Close();
             }
         }
     }
