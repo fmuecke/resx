@@ -1,6 +1,6 @@
 ﻿// <copyright file="GlobalSuppressions.cs" company="Florian Mücke">
 // Copyright (c) Florian Mücke. All rights reserved.
-// Licensed under the BSD license. See LICENSE file in the project root for full license information.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
 // This file is used by Code Analysis to maintain SuppressMessage
