@@ -1,4 +1,4 @@
-﻿// <copyright file="ResXParser.cs" company="Florian Mücke">
+﻿// <copyright file="ResXFile.cs" company="Florian Mücke">
 // Copyright (c) Florian Mücke. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -15,7 +15,13 @@ namespace fmdev.ResX
 
     public static class ResXFile
     {
-        public static List<ResXEntry> Read(string filename)
+        public enum Mode
+        {
+            SkipComments = 0,
+            IncludeComments = 1
+        }
+
+        public static List<ResXEntry> Read(string filename, Mode mode = Mode.IncludeComments)
         {
             var result = new List<ResXEntry>();
             using (var resx = new ResXResourceReader(filename))
@@ -25,11 +31,12 @@ namespace fmdev.ResX
                 while (dict.MoveNext())
                 {
                     var node = dict.Value as ResXDataNode;
+                    var comment = mode == Mode.IncludeComments ? node.Comment.Replace("\r", string.Empty) : string.Empty;
                     result.Add(new ResXEntry()
                     {
                         Id = dict.Key as string,
                         Value = (node.GetValue((ITypeResolutionService)null) as string).Replace("\r", string.Empty),
-                        Comment = node.Comment.Replace("\r", string.Empty)
+                        Comment = comment
                     });
                 }
 
@@ -39,7 +46,7 @@ namespace fmdev.ResX
             return result;
         }
 
-        public static void Write(string filename, IEnumerable<ResXEntry> entries)
+        public static void Write(string filename, IEnumerable<ResXEntry> entries, Mode mode = Mode.SkipComments)
         {
             using (var resx = new ResXResourceWriter(filename))
             {
@@ -47,7 +54,7 @@ namespace fmdev.ResX
                 {
                     var node = new ResXDataNode(entry.Id, entry.Value.Replace("\n", Environment.NewLine));
 
-                    if (!string.IsNullOrWhiteSpace(entry.Comment))
+                    if (mode == Mode.IncludeComments && !string.IsNullOrWhiteSpace(entry.Comment))
                     {
                         node.Comment = entry.Comment.Replace("\n", Environment.NewLine);
                     }
