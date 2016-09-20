@@ -19,10 +19,10 @@ namespace fmdev.ResX
         public enum Option
         {
             None = 0,
-            IncludeComments = 1
+            SkipComments = 1
         }
 
-        public static List<ResXEntry> Read(string filename, Option options = Option.IncludeComments)
+        public static List<ResXEntry> Read(string filename, Option options = Option.None)
         {
             var result = new List<ResXEntry>();
             using (var resx = new ResXResourceReader(filename))
@@ -32,7 +32,7 @@ namespace fmdev.ResX
                 while (dict.MoveNext())
                 {
                     var node = dict.Value as ResXDataNode;
-                    var comment = options.HasFlag(Option.IncludeComments) ? node.Comment.Replace("\r", string.Empty) : string.Empty;
+                    var comment = options.HasFlag(Option.SkipComments) ? string.Empty : node.Comment.Replace("\r", string.Empty);
                     result.Add(new ResXEntry()
                     {
                         Id = dict.Key as string,
@@ -53,11 +53,11 @@ namespace fmdev.ResX
             {
                 foreach (var entry in entries)
                 {
-                    var node = new ResXDataNode(entry.Id, entry.Value.Replace("\n", Environment.NewLine));
+                    var node = new ResXDataNode(entry.Id, entry.Value.Replace("\r", string.Empty).Replace("\n", Environment.NewLine));
 
-                    if (options.HasFlag(Option.IncludeComments) && !string.IsNullOrWhiteSpace(entry.Comment))
+                    if (!options.HasFlag(Option.SkipComments) && !string.IsNullOrWhiteSpace(entry.Comment))
                     {
-                        node.Comment = entry.Comment.Replace("\n", Environment.NewLine);
+                        node.Comment = entry.Comment.Replace("\r", string.Empty).Replace("\n", Environment.NewLine);
                     }
 
                     resx.AddResource(node);

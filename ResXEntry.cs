@@ -19,10 +19,10 @@ namespace fmdev.ResX
         {
             if (obj is ResXEntry)
             {
-                return Id.CompareTo((obj as ResXEntry).Id);
+                return this.Id.CompareTo((obj as ResXEntry).Id);
             }
 
-            return Id.CompareTo(obj.ToString());
+            return this.Id.CompareTo(obj.ToString());
         }
     }
 }
