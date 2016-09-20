@@ -1,1 +1,1 @@
-nuget pack fmdev.ResX.csproj -Build -Symbols -Properties Configuration=Release
+nuget pack fmdev.ResX\fmdev.ResX.csproj -Build -Symbols -Properties Configuration=Release

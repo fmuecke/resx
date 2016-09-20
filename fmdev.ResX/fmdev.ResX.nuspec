@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/fmuecke/resx</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>better comment handling</releaseNotes>
+    <releaseNotes>even better comment and newline handling</releaseNotes>
     <copyright>Copyright © 2016  Florian Mücke</copyright>
     <tags>Resx translation</tags>
 	<dependencies />
