@@ -15,13 +15,14 @@ namespace fmdev.ResX
 
     public static class ResXFile
     {
-        public enum Mode
+        [Flags]
+        public enum Option
         {
-            SkipComments = 0,
+            None = 0,
             IncludeComments = 1
         }
 
-        public static List<ResXEntry> Read(string filename, Mode mode = Mode.IncludeComments)
+        public static List<ResXEntry> Read(string filename, Option options = Option.IncludeComments)
         {
             var result = new List<ResXEntry>();
             using (var resx = new ResXResourceReader(filename))
@@ -31,7 +32,7 @@ namespace fmdev.ResX
                 while (dict.MoveNext())
                 {
                     var node = dict.Value as ResXDataNode;
-                    var comment = mode == Mode.IncludeComments ? node.Comment.Replace("\r", string.Empty) : string.Empty;
+                    var comment = options.HasFlag(Option.IncludeComments) ? node.Comment.Replace("\r", string.Empty) : string.Empty;
                     result.Add(new ResXEntry()
                     {
                         Id = dict.Key as string,
@@ -46,7 +47,7 @@ namespace fmdev.ResX
             return result;
         }
 
-        public static void Write(string filename, IEnumerable<ResXEntry> entries, Mode mode = Mode.SkipComments)
+        public static void Write(string filename, IEnumerable<ResXEntry> entries, Option options = Option.None)
         {
             using (var resx = new ResXResourceWriter(filename))
             {
@@ -54,7 +55,7 @@ namespace fmdev.ResX
                 {
                     var node = new ResXDataNode(entry.Id, entry.Value.Replace("\n", Environment.NewLine));
 
-                    if (mode == Mode.IncludeComments && !string.IsNullOrWhiteSpace(entry.Comment))
+                    if (options.HasFlag(Option.IncludeComments) && !string.IsNullOrWhiteSpace(entry.Comment))
                     {
                         node.Comment = entry.Comment.Replace("\n", Environment.NewLine);
                     }
