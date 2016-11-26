@@ -135,5 +135,48 @@ namespace fmdev.ResX.Tests
                 File.Delete(tempFile);
             }
         }
+
+        [TestMethod]
+        public void GenerateDesignerFileTest()
+        {
+            var tempFile = Path.GetTempFileName();
+            try
+            {
+                var testData = TestData.SampleEntries();
+                ResXFile.Write(tempFile, testData);
+                var className = "TestClassName";
+                var namespaceName = "fmdev.ResX.Tests";
+                Assert.IsTrue(ResXFile.GenerateDesignerFile(tempFile, className, namespaceName), "Designer file generation must return true");
+                var expectedDesignerFile = Path.Combine(Path.GetDirectoryName(tempFile), $"{className}.Designer.cs");
+                Assert.IsTrue(File.Exists(expectedDesignerFile), "Generated designer file must be written");
+                Assert.IsTrue(File.ReadAllText(expectedDesignerFile).Contains($"public class {className} "), "generated public designer class must be public");
+                File.Delete(expectedDesignerFile);
+
+                Assert.IsTrue(ResXFile.GenerateInternalDesignerFile(tempFile, className, namespaceName), "Designer file generation must return true");
+                Assert.IsTrue(File.Exists(expectedDesignerFile), "Generated designer file must be written");
+                Assert.IsTrue(File.ReadAllText(expectedDesignerFile).Contains($"internal class {className} "), "generated internal designer class must be internal");
+                File.Delete(expectedDesignerFile);
+            }
+            finally
+            {
+                File.Delete(tempFile);
+            }
+        }
+
+        [TestMethod]
+        public void InvalidGenerateDesignerFileTest()
+        {
+            Assert.ThrowsException<FileNotFoundException>(() => ResXFile.GenerateDesignerFile("ThisResXFileDoesNotExist.rex", "someclass", "some.namespace"), "Nonexistent resX file must lead to FileNotFoundException");
+            var tempFile = Path.GetTempFileName();
+            try
+            {
+                Assert.ThrowsException<ArgumentException>(() => ResXFile.GenerateDesignerFile(tempFile, null, null), "Empty class names should not be allowed and result in an ArgumentException");
+                Assert.ThrowsException<ArgumentException>(() => ResXFile.GenerateDesignerFile(tempFile, "myClass", null), "Empty namespace names should not be allowed and result in an ArgumentException");
+            }
+            finally
+            {
+                File.Delete(tempFile);
+            }
+        }
     }
 }
