@@ -152,7 +152,7 @@ namespace fmdev.ResX.Tests
                 Assert.IsTrue(File.ReadAllText(expectedDesignerFile).Contains($"public class {className} "), "generated public designer class must be public");
                 File.Delete(expectedDesignerFile);
 
-                Assert.IsTrue(ResXFile.GenerateInternalDesignerFile(tempFile, className, namespaceName), "Designer file generation must return true");
+                Assert.IsTrue(ResXFile.GenerateDesignerFile(tempFile, className, namespaceName, true /*internalClass*/), "Designer file generation must return true");
                 Assert.IsTrue(File.Exists(expectedDesignerFile), "Generated designer file must be written");
                 Assert.IsTrue(File.ReadAllText(expectedDesignerFile).Contains($"internal class {className} "), "generated internal designer class must be internal");
                 File.Delete(expectedDesignerFile);

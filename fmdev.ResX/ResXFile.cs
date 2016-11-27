@@ -68,20 +68,27 @@ namespace fmdev.ResX
             }
         }
 
-        // Returns false if at least one property couldn't be generated.
-        public static bool GenerateInternalDesignerFile(string resXFile, string className, string namespaceName)
-        {
-            return GenerateDesignerFile(resXFile, className, namespaceName, true);
-        }
-
-        // Returns false if at least one property couldn't be generated.
+        /// <summary>
+        /// Generates a public C# designer class.
+        /// </summary>
+        /// <param name="resXFile">The source resx file.</param>
+        /// <param name="className">The base class name.</param>
+        /// <param name="namespaceName">The namespace for the generated code.</param>
+        /// <returns>false if generation of at least one property couldn't be generated.</returns>
         public static bool GenerateDesignerFile(string resXFile, string className, string namespaceName)
         {
             return GenerateDesignerFile(resXFile, className, namespaceName, false);
         }
 
-        // Returns false if at least one property couldn't be generated.
-        private static bool GenerateDesignerFile(string resXFile, string className, string namespaceName, bool isInternal)
+        /// <summary>
+        /// Generates a C# designer class.
+        /// </summary>
+        /// <param name="resXFile">The source resx file.</param>
+        /// <param name="className">The base class name.</param>
+        /// <param name="namespaceName">The namespace for the generated code.</param>
+        /// <param name="internalClass">Specifies if the class has internal or public access level.</param>
+        /// <returns>false if generation of at least one property failed.</returns>
+        public static bool GenerateDesignerFile(string resXFile, string className, string namespaceName, bool internalClass)
         {
             if (!File.Exists(resXFile))
             {
@@ -106,7 +113,7 @@ namespace fmdev.ResX
                     className,
                     namespaceName,
                     codeProvider,
-                    isInternal,
+                    internalClass,
                     out unmatchedElements);
 
             var designerFileName = Path.Combine(Path.GetDirectoryName(resXFile), $"{className}.Designer.cs");
