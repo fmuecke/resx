@@ -10,7 +10,9 @@
     <projectUrl>https://github.com/fmuecke/resx</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>v0.3: supports generation of C# designer files</releaseNotes>
+    <releaseNotes>
+        v0.3.1: targeting .Net 4.5 instead of 4.6 for better compatibility
+        v0.3: supports generation of C# designer files</releaseNotes>
     <copyright>Copyright © 2016  Florian Mücke</copyright>
     <tags>Resx translation</tags>
 	<dependencies />
